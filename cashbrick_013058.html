@@ -1,0 +1,490 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cashbrick.com — Online Banking</title>
+  <meta name="description" content="Cashbrick.com — modern, secure online banking for personal and business accounts. Send money, save smarter, and grow your finances with confidence." />
+
+  <!-- "cds" (CDNs) for more functionality: Google Fonts & Chart.js -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+
+  <style>
+    :root{
+      --bg: #0b0f14;
+      --surface: #10151d;
+      --card: #121a23;
+      --muted: #94a3b8;
+      --text: #e6edf6;
+      --primary: #59f; /* electric blue */
+      --primary-600: #3c7cff;
+      --accent: #7af7c9; /* mint */
+      --danger: #ff6b6b;
+      --warning: #ffcf5c;
+      --success: #33d69f;
+      --ring: rgba(88, 150, 255, .45);
+      --radius-xl: 20px;
+      --shadow: 0 10px 30px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.03);
+      --glass: rgba(255,255,255,.04);
+      --gradient: linear-gradient(135deg, rgba(60,124,255,.18), rgba(122,247,201,.14));
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color:var(--text); background: radial-gradient(1200px 600px at 10% -10%, rgba(60,124,255,.15), transparent 50%), radial-gradient(1000px 500px at 90% -20%, rgba(122,247,201,.12), transparent 50%), var(--bg);
+    }
+    a{color:inherit; text-decoration:none}
+    .container{max-width:1200px; margin:0 auto; padding:0 24px}
+    .pill{display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:999px; background:var(--glass); border:1px solid rgba(255,255,255,.05)}
+    .btn{display:inline-flex; align-items:center; justify-content:center; gap:10px; padding:14px 18px; border-radius:14px; background:var(--primary); color:#fff; font-weight:700; border:none; cursor:pointer; box-shadow:0 8px 20px rgba(60,124,255,.35); transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease}
+    .btn:hover{transform:translateY(-2px); box-shadow:0 14px 28px rgba(60,124,255,.45)}
+    .btn.secondary{background:transparent; color:var(--text); border:1px solid rgba(255,255,255,.12)}
+    .btn.ghost{background:transparent; border:1px dashed rgba(255,255,255,.15)}
+    .tag{padding:6px 10px; border-radius:999px; background:rgba(122,247,201,.08); color:#bafae4; font-weight:600; border:1px solid rgba(122,247,201,.2)}
+
+    /* Topbar */
+    .topbar{position:sticky; top:0; z-index:50; backdrop-filter:saturate(150%) blur(12px); background:linear-gradient(to bottom, rgba(10,14,20,.8), rgba(10,14,20,.4)); border-bottom:1px solid rgba(255,255,255,.06)}
+    .nav{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 0}
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{width:34px; height:34px; border-radius:12px; display:grid; place-items:center; background:conic-gradient(from 230deg, #59f, #7af7c9); box-shadow:0 4px 18px rgba(90,153,255,.45)}
+    .brand b{font-weight:900; letter-spacing:.3px}
+    .nav-links{display:flex; gap:8px; align-items:center}
+    .nav a{padding:10px 12px; border-radius:12px; color:var(--muted)}
+    .nav a:hover{background:var(--glass); color:var(--text)}
+
+    /* Hero */
+    .hero{padding:64px 0 48px}
+    .hero-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:28px; align-items:center}
+    .hero h1{font-size:clamp(36px, 6vw, 64px); line-height:1.05; margin:16px 0}
+    .sub{color:#b8c2d6; font-size:clamp(16px, 2.3vw, 19px)}
+    .hero-card{background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:var(--radius-xl); box-shadow:var(--shadow); padding:24px; position:relative; overflow:hidden}
+    .hero-card::after{content:""; position:absolute; inset:-1px; background:var(--gradient); mask:linear-gradient(to bottom, rgba(255,255,255,.6), transparent 60%); pointer-events:none}
+
+    /* Feature grid */
+    .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+    .card{background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:18px; padding:18px; box-shadow:var(--shadow)}
+    .card h3{margin:12px 0 6px}
+    .muted{color:var(--muted)}
+
+    /* Products section */
+    .products{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
+    .product{padding:20px; background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); border:1px solid rgba(255,255,255,.06); border-radius:18px}
+
+    /* Dashboard demo */
+    .dashboard{display:grid; grid-template-columns:1.2fr .8fr; gap:20px}
+    .panel{background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:18px; padding:18px}
+    table{width:100%; border-collapse:collapse}
+    th, td{padding:12px; text-align:left; border-bottom:1px solid rgba(255,255,255,.06)}
+
+    /* CTA banner */
+    .cta{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:24px; background:linear-gradient(90deg, rgba(60,124,255,.24), rgba(122,247,201,.14)); border:1px solid rgba(255,255,255,.12); border-radius:20px}
+
+    /* Footer */
+    footer{margin-top:60px; padding:40px 0; border-top:1px solid rgba(255,255,255,.06)}
+    .footgrid{display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:24px}
+
+    /* Utils */
+    .row{display:flex; align-items:center; gap:12px}
+    .spacer{height:56px}
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-grid, .dashboard{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr 1fr}
+      .products{grid-template-columns:1fr}
+      .footgrid{grid-template-columns:1fr 1fr}
+      .cta{flex-direction:column; align-items:flex-start}
+    }
+    @media (max-width:640px){
+      .grid{grid-template-columns:1fr}
+      .footgrid{grid-template-columns:1fr}
+      .nav-links{display:none}
+    }
+
+    /* Toggle */
+    .toggle{background:transparent; border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:8px 10px}
+    .visually-hidden{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+
+    /* Icon buttons */
+    .icon-btn{background:transparent; border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:10px; display:inline-grid; place-items:center}
+
+    .badge{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:12px; background:rgba(89,153,255,.1); border:1px solid rgba(89,153,255,.25)}
+  </style>
+</head>
+<body>
+  <!-- Top Navigation -->
+  <header class="topbar">
+    <div class="container nav" role="navigation" aria-label="Main">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <!-- SVG Brick logo -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="8" width="18" height="11" rx="3" fill="white" fill-opacity=".9"/>
+            <rect x="6" y="5" width="12" height="4" rx="2" fill="#0b0f14"/>
+          </svg>
+        </div>
+        <b>Cashbrick<span style="opacity:.7">.com</span></b>
+        <span class="tag" title="Bank‑grade encryption">256‑bit Secure</span>
+      </div>
+      <nav class="nav-links" aria-label="Sections">
+        <a href="#home" class="row" aria-label="Home">
+          <!-- Home icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a2 2 0 0 1-2 2h-4v-6H10v6H6a2 2 0 0 1-2-2v-9.5Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Home</a>
+        <a href="#features" class="row" aria-label="Features">
+          <!-- Shield icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l7 3v6c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V6l7-3Z" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+          Features</a>
+        <a href="#products" class="row" aria-label="Products">
+          <!-- Wallet icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M17 10h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2z" fill="currentColor"/></svg>
+          Products</a>
+        <a href="#dashboard" class="row" aria-label="Dashboard demo">
+          <!-- Graph icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 19V5" stroke="currentColor" stroke-width="1.6"/><path d="M8 19V9" stroke="currentColor" stroke-width="1.6"/><path d="M12 19V12" stroke="currentColor" stroke-width="1.6"/><path d="M16 19V7" stroke="currentColor" stroke-width="1.6"/><path d="M20 19V4" stroke="currentColor" stroke-width="1.6"/></svg>
+          Dashboard</a>
+        <a href="#support" class="row" aria-label="Support">
+          <!-- Chat bubbles icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 14a6 6 0 0 0 5.6 6H18l2 2V8a6 6 0 0 0-6-6H8A6 6 0 0 0 4 8z" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+          Support</a>
+      </nav>
+      <div class="row">
+        <button class="toggle row" id="modeToggle" aria-pressed="false" aria-label="Toggle dark mode">
+          <!-- Sun/Moon icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path id="modeIcon" d="M12 4a8 8 0 1 0 8 8c0-4.42-3.58-8-8-8Z" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+        <a href="#" class="btn secondary">Sign in</a>
+        <a href="#" class="btn">Open an account</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section id="home" class="hero container">
+    <div class="hero-grid">
+      <div>
+        <span class="pill">
+          <!-- Lightning icon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>
+          Faster payments. Smarter savings.
+        </span>
+        <h1>Modern, secure online banking that moves at your speed.</h1>
+        <p class="sub">Cashbrick.com helps you send money globally, automate savings, and manage cards—all with real‑time insights and bank‑grade security.</p>
+        <div class="row" style="margin:20px 0 0">
+          <a class="btn" href="#onboarding">Create your free account</a>
+          <a class="btn ghost" href="#products">Explore products</a>
+        </div>
+        <div class="row" style="margin-top:14px; color:#b8c2d6">
+          <span class="row"><!-- Lock icon -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M8 10V7a4 4 0 1 1 8 0v3" stroke="currentColor" stroke-width="1.6"/></svg>
+            FDIC‑style protection & 2FA</span>
+          <span class="row"><!-- Globe icon -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" stroke="currentColor" stroke-width="1.6"/></svg>
+            160+ countries supported</span>
+        </div>
+      </div>
+      <div class="hero-card" aria-label="Account preview">
+        <div class="row" style="justify-content:space-between; margin-bottom:10px">
+          <div class="badge"><!-- Card icon -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="1.6"/><rect x="6" y="9" width="12" height="2" rx="1" fill="currentColor"/></svg>
+            Cashbrick • Platinum</div>
+          <span class="pill">Balance • $24,680.12</span>
+        </div>
+        <canvas id="balanceChart" height="140" aria-label="Balance chart" role="img"></canvas>
+        <div class="row" style="margin-top:14px; justify-content:space-between">
+          <div class="row"><span class="tag">+4.8% this month</span></div>
+          <div class="row" style="gap:8px">
+            <button class="icon-btn" title="Add funds" aria-label="Add funds">
+              <!-- Plus icon -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+            <button class="icon-btn" title="Send money" aria-label="Send money">
+              <!-- Arrow right icon -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="container" style="padding:20px 0 10px">
+    <div class="grid">
+      <div class="card">
+        <div class="row">
+          <!-- Shield check -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l7 3v6c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V6l7-3Z" stroke="currentColor" stroke-width="1.6"/><path d="m8.5 12.5 2.5 2.5L16 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3>Bank‑grade Security</h3>
+        </div>
+        <p class="muted">256‑bit encryption, hardware key support, and real‑time fraud monitoring keep your money safe.</p>
+      </div>
+      <div class="card">
+        <div class="row">
+          <!-- Zap icon -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>
+          <h3>Instant Transfers</h3>
+        </div>
+        <p class="muted">Move money in seconds with zero hidden fees. Send to bank accounts, wallets, or cards worldwide.</p>
+      </div>
+      <div class="card">
+        <div class="row">
+          <!-- Coins icon -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><ellipse cx="9" cy="8" rx="5" ry="3" stroke="currentColor" stroke-width="1.6"/><path d="M4 8v8c0 1.7 2.2 3 5 3s5-1.3 5-3V8" stroke="currentColor" stroke-width="1.6"/><ellipse cx="15" cy="11" rx="5" ry="3" stroke="currentColor" stroke-width="1.6"/></svg>
+          <h3>Smart Savings</h3>
+        </div>
+        <p class="muted">Automate round‑ups, vaults, and high‑yield pots to reach goals faster.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section id="products" class="container" style="padding:10px 0 30px">
+    <h2>Products made for growth</h2>
+    <p class="muted">Choose the account that fits you and scale seamlessly when you’re ready.</p>
+    <div class="spacer"></div>
+    <div class="products">
+      <article class="product">
+        <div class="row">
+          <!-- User card icon -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="11" r="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M7 17c1.2-2 3-3 5-3s3.8 1 5 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <h3>Personal</h3>
+        </div>
+        <p class="muted">Everyday banking with zero monthly fees, instant virtual cards, and budgeting tools.</p>
+        <div class="row" style="justify-content:space-between; margin-top:10px">
+          <span class="tag">$0/mo</span>
+          <a href="#onboarding" class="btn secondary">Get started</a>
+        </div>
+      </article>
+      <article class="product">
+        <div class="row">
+          <!-- Briefcase icon -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="8" width="18" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6"/></svg>
+          <h3>Business</h3>
+        </div>
+        <p class="muted">Multi‑user access, smart invoices, and powerful cash‑flow insights for teams.</p>
+        <div class="row" style="justify-content:space-between; margin-top:10px">
+          <span class="tag">$19/mo</span>
+          <a href="#onboarding" class="btn secondary">Open business</a>
+        </div>
+      </article>
+      <article class="product">
+        <div class="row">
+          <!-- Credit card icon -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="1.6"/><rect x="6" y="9" width="12" height="2" rx="1" fill="currentColor"/></svg>
+          <h3>Cards</h3>
+        </div>
+        <p class="muted">Physical and virtual cards with real‑time controls, spend limits, and merchant locks.</p>
+        <div class="row" style="justify-content:space-between; margin-top:10px">
+          <span class="tag">2% cashback</span>
+          <a href="#onboarding" class="btn secondary">Request card</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Dashboard Demo -->
+  <section id="dashboard" class="container" style="padding:10px 0 30px">
+    <div class="row" style="justify-content:space-between; align-items:flex-end">
+      <div>
+        <h2>Beautiful, powerful dashboard</h2>
+        <p class="muted">Track balances, cash flow, and transfers in real time across all your accounts.</p>
+      </div>
+      <div class="row">
+        <button class="btn secondary" onclick="simulateTxn()">Simulate Transaction</button>
+        <button class="btn" onclick="toast('All systems operational')">System Check</button>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="dashboard">
+      <div class="panel">
+        <div class="row" style="justify-content:space-between">
+          <h3>Recent Transactions</h3>
+          <span class="pill">USD • Main Wallet</span>
+        </div>
+        <table aria-label="Recent transactions">
+          <thead>
+            <tr><th>When</th><th>Description</th><th>Type</th><th>Amount</th><th>Status</th></tr>
+          </thead>
+          <tbody id="txBody">
+            <tr><td>Today</td><td>Coffee • Blue Bottle</td><td>Card</td><td>−$4.50</td><td><span class="tag">Cleared</span></td></tr>
+            <tr><td>Today</td><td>Salary • Cashbrick Inc.</td><td>ACH</td><td>+$4,200.00</td><td><span class="tag">Settled</span></td></tr>
+            <tr><td>Yesterday</td><td>Transfer • Savings Vault</td><td>Internal</td><td>−$400.00</td><td><span class="tag">Scheduled</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <aside class="panel">
+        <h3 style="margin-bottom:10px">Quick Actions</h3>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <button class="btn" style="width:100%">
+            <!-- Send icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-right:6px"><path d="M4 12h16M12 4l8 8-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Send
+          </button>
+          <button class="btn secondary" style="width:100%">
+            <!-- Download icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-right:6px"><path d="M12 4v10m0 0 4-4m-4 4-4-4M4 20h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Request
+          </button>
+          <button class="btn secondary" style="width:100%">
+            <!-- Repeat icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-right:6px"><path d="M4 7h10a4 4 0 0 1 4 4v9" stroke="currentColor" stroke-width="1.8"/><path d="M9 3 4 7l5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Recurring
+          </button>
+          <button class="btn secondary" style="width:100%">
+            <!-- Shield icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-right:6px"><path d="M12 3l7 3v6c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V6l7-3Z" stroke="currentColor" stroke-width="1.6"/></svg>
+            Freeze card
+          </button>
+        </div>
+        <div style="height:16px"></div>
+        <h3>Spending Overview</h3>
+        <canvas id="spendChart" height="180" aria-label="Spending chart" role="img"></canvas>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Support & CTA -->
+  <section id="support" class="container" style="padding:10px 0 30px">
+    <div class="cta">
+      <div>
+        <h3>24/7 Priority Support</h3>
+        <p class="muted">Talk to a real person in under two minutes—anytime. Premium onboarding for businesses included.</p>
+      </div>
+      <div class="row">
+        <a class="btn secondary" href="#">Help Center</a>
+        <a class="btn" href="#">Chat with us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="container" role="contentinfo">
+    <div class="footgrid">
+      <div>
+        <div class="row">
+          <div class="logo" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="8" width="18" height="11" rx="3" fill="white" fill-opacity=".9"/><rect x="6" y="5" width="12" height="4" rx="2" fill="#0b0f14"/></svg></div>
+          <b>Cashbrick.com</b>
+        </div>
+        <p class="muted">© <span id="year"></span> Cashbrick Financial Technologies. All rights reserved.</p>
+        <p class="muted">Cashbrick is a financial technology company, not a bank. Banking services provided by partner institutions. Card issued by member banks pursuant to license.</p>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="#">About</a><br/>
+        <a href="#">Careers</a><br/>
+        <a href="#">Press</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="#">Privacy</a><br/>
+        <a href="#">Terms</a><br/>
+        <a href="#">Disclosures</a>
+      </div>
+      <div>
+        <h4>Get the app</h4>
+        <div class="row">
+          <!-- App store badges (simple SVGs) -->
+          <a href="#" class="pill" aria-label="Download on the App Store">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 2s-2 1-3 3c-1 2 0 4 0 4s2 0 4-3c2-3-1-4-1-4Z"/></svg>
+            App Store
+          </a>
+          <a href="#" class="pill" aria-label="Get it on Google Play">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 4v16l11-8L3 4Zm12 8 6-4v8l-6-4Z"/></svg>
+            Google Play
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div id="toast" role="status" aria-live="polite" style="position:fixed; inset:auto 20px 20px auto; padding:12px 14px; background:var(--surface); border:1px solid rgba(255,255,255,.12); border-radius:12px; box-shadow:var(--shadow); transform:translateY(20px); opacity:0; transition:all .25s ease"></div>
+
+  <script>
+    // Dark mode toggle (pure CSS variables)
+    const toggle = document.getElementById('modeToggle');
+    const icon = document.getElementById('modeIcon');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    let dark = localStorage.getItem('cashbrick-theme') ?? (prefersDark ? 'dark' : 'dark'); // default dark
+    function applyTheme(){
+      document.documentElement.style.setProperty('--bg', dark==='dark' ? '#0b0f14' : '#f6f7fb');
+      document.documentElement.style.setProperty('--surface', dark==='dark' ? '#10151d' : '#ffffff');
+      document.documentElement.style.setProperty('--card', dark==='dark' ? '#121a23' : '#ffffff');
+      document.body.style.color = dark==='dark' ? '#e6edf6' : '#0b0f14';
+      document.body.style.background = dark==='dark' ? 'radial-gradient(1200px 600px at 10% -10%, rgba(60,124,255,.15), transparent 50%), radial-gradient(1000px 500px at 90% -20%, rgba(122,247,201,.12), transparent 50%), #0b0f14' : '#f6f7fb';
+      icon.setAttribute('d', dark==='dark' ? 'M12 4a8 8 0 1 0 8 8c0-4.42-3.58-8-8-8Z' : 'M12 2v4m0 12v4M2 12h4m12 0h4m-2.93-6.93-2.83 2.83M7.76 16.24l-2.83 2.83M7.76 7.76 4.93 4.93M19.07 19.07l-2.83-2.83');
+    }
+    applyTheme();
+    toggle.addEventListener('click', () => {dark = dark==='dark' ? 'light' : 'dark'; localStorage.setItem('cashbrick-theme', dark); toggle.setAttribute('aria-pressed', String(dark==='dark')); applyTheme();});
+
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Toast helper
+    function toast(msg){
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.style.opacity=1; t.style.transform='translateY(0)';
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(()=>{t.style.opacity=0; t.style.transform='translateY(20px)';}, 2500);
+    }
+
+    // Charts (Chart.js via CDN)
+    window.addEventListener('DOMContentLoaded', () => {
+      const ctx = document.getElementById('balanceChart').getContext('2d');
+      const gradient = ctx.createLinearGradient(0,0,0,160);
+      gradient.addColorStop(0, 'rgba(60,124,255,.45)');
+      gradient.addColorStop(1, 'rgba(60,124,255,0)');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+          datasets: [{
+            label: 'Balance',
+            data: [12000, 13200, 12800, 15000, 16800, 17600, 19000, 20680, 19800, 21600, 23680, 24680],
+            fill: true,
+            backgroundColor: gradient,
+            borderColor: 'rgba(60,124,255,1)',
+            borderWidth: 2,
+            pointRadius: 0,
+            tension: .35
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {legend: {display: false}, tooltip: {mode:'index', intersect:false}},
+          scales: {x: {display:false}, y: {display:false}}
+        }
+      });
+
+      const spend = document.getElementById('spendChart');
+      new Chart(spend, {
+        type: 'doughnut',
+        data: {
+          labels: ['Food', 'Transport', 'Shopping', 'Bills', 'Other'],
+          datasets: [{
+            data: [22, 14, 28, 26, 10],
+            backgroundColor: ['#3c7cff','#7af7c9','#ffcf5c','#ff6b6b','#94a3b8'],
+            borderWidth: 0,
+            hoverOffset: 6
+          }]
+        },
+        options: {plugins:{legend:{position:'bottom'}}, cutout:'60%'}
+      });
+    });
+
+    // Simulate a transaction by injecting a table row
+    function simulateTxn(){
+      const row = document.createElement('tr');
+      const amt = (Math.random()*-90 - 10).toFixed(2);
+      row.innerHTML = `<td>Now</td><td>Ride • Cashbrick Taxi</td><td>Card</td><td>−$${Math.abs(amt)}</td><td><span class="tag">Pending</span></td>`;
+      document.getElementById('txBody').prepend(row);
+      toast('New transaction added');
+    }
+  </script>
+</body>
+</html>
